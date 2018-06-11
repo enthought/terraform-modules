@@ -19,7 +19,8 @@ resource "aws_s3_bucket" "secret_bucket" {
   acl    = "private"
 
   tags {
-    application = "${var.namespace}"
+    application   = "${var.namespace}"
+    ProvisionedBy = "terraform"
   }
 
   versioning {
@@ -42,8 +43,9 @@ resource "aws_kms_key" "environment_keys" {
   description = "Key for ${var.namespace}/${var.environments[count.index]}"
 
   tags = {
-    environment = "${var.environments[count.index]}"
-    product     = "${var.namespace}"
+    environment   = "${var.environments[count.index]}"
+    product       = "${var.namespace}"
+    ProvisionedBy = "terraform"
   }
 }
 
