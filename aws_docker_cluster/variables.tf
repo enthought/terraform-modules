@@ -84,9 +84,9 @@ variable "enable_efs" {
 }
 
 variable "enable_efs_encryption" {
-    description = "Encrypt any EFS volumes"
-    type = "string"
-    default = "no"
+  description = "Encrypt any EFS volumes"
+  type        = "string"
+  default     = "no"
 }
 
 # Enable automatic redirection of all container logs to CloudWatch. If this is
