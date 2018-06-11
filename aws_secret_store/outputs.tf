@@ -24,5 +24,5 @@ output "s3_secret_bucket_id" {
 
 output "iam_secret_retrieval_policies" {
   description = "The ARN of policies allowing retrieval and decryption of secrets"
-  value       = "${aws_iam_policy.secret_retrieval_policies.*.arn}"
+  value       = "${zipmap(var.environments, aws_iam_policy.secret_retrieval_policies.*.arn)}"
 }
