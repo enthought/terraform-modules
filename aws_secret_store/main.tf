@@ -37,7 +37,7 @@ resource "aws_s3_bucket" "secret_bucket" {
 
 # A KMS master key for each environment, used to generate data keys for
 # object encryption
-resource "aws_kms_key" "key" {
+resource "aws_kms_key" "environment_keys" {
   count       = "${length(var.environments)}"
   description = "Key for ${var.namespace}/${var.environments[count.index]}"
 
@@ -47,16 +47,16 @@ resource "aws_kms_key" "key" {
   }
 }
 
-resource "aws_kms_alias" "deploy_alias" {
+resource "aws_kms_alias" "deploy_aliases" {
   count         = "${length(var.environments)}"
   name          = "alias/enthought/${var.namespace}/deploy/${var.environments[count.index]}"
-  target_key_id = "${aws_kms_key.key.*.id[count.index]}"
+  target_key_id = "${aws_kms_key.environment_keys.*.id[count.index]}"
 }
 
-resource "aws_kms_alias" "standard_alias" {
+resource "aws_kms_alias" "standard_aliases" {
   count         = "${length(var.environments)}"
   name          = "alias/enthought/${var.namespace}/${var.environments[count.index]}/secrets"
-  target_key_id = "${aws_kms_key.key.*.id[count.index]}"
+  target_key_id = "${aws_kms_key.environment_keys.*.id[count.index]}"
 }
 
 # A policy allowing the retrieval of encrypted secrets for a given environment
@@ -79,12 +79,12 @@ data "aws_iam_policy_document" "secret_retrieval_policy_doc" {
       # branches at the moment)
       "${format("arn:aws:s3:::%s/%s", local.s3_bucket_name, var.environments[count.index])}",
 
-      "${aws_kms_key.key.*.arn[count.index]}",
+      "${aws_kms_key.environment_keys.*.arn[count.index]}",
     ]
   }
 }
 
-resource "aws_iam_policy" "secret_retrieval_policy" {
+resource "aws_iam_policy" "secret_retrieval_policies" {
   count  = "${length(var.environments)}"
   name   = "${var.namespace}_${var.environments[count.index]}_secret_retrieval"
   policy = "${data.aws_iam_policy_document.secret_retrieval_policy_doc.*.json[count.index]}"
