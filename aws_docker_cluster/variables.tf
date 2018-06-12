@@ -83,6 +83,7 @@ variable "enable_efs" {
   default     = "yes"
 }
 
+# SHould be one of "yes" or "no"
 variable "enable_efs_encryption" {
   description = "Encrypt any EFS volumes"
   type        = "string"
@@ -117,13 +118,6 @@ variable "enable_auto_prune" {
   default     = "no"
 }
 
-# SHould be one of "yes" or "no"
-variable "enable_efs_encryption" {
-  description = "Whether EFS volumes should be encrypted."
-  type        = "string"
-  default     = "no"
-}
-
 variable "manager_disk_size" {
   description = "Manager disk size in GiB."
   type        = "string"
@@ -154,4 +148,55 @@ variable "cloudformation_stack_timeout" {
   description = "How long to wait before timing out when applying cloudformation stack changes."
   type        = "string"
   default     = "60"
+}
+
+# **********************************************************************
+# Network Configuration
+# **********************************************************************
+
+variable "vpc_peering_configuration" {
+  description = <<EOF
+If provided, VPC and Route Table IDs to which a peering connection and
+route should be stablished from the cluster VPC. The provided route table
+should be associated with the provided VPC. In addition, a security group
+will be created in the provided VPC to allow the specification of
+ingress/egress rules.
+
+If not provided, the cluster VPC will remain isolated.
+EOF
+
+  type = "map"
+
+  default = {
+    vpc_id         = "none"
+    route_table_id = "none"
+  }
+}
+
+variable "dns_configuration" {
+  description = <<EOF
+If provided, a DNS record will be created with a record pointing to the
+primary DNS target of the cluster (the cluster load balancer). By
+default, a CNAME record with a ttl of 300 seconds will be created. These
+values can be customized via their respective variables.
+EOF
+
+  type = "map"
+
+  default = {
+    zone_id = "none"
+    name    = "none"
+  }
+}
+
+variable "dns_record_type" {
+  description = "The type of DNS record to create if `dns_configuration` is specified."
+  type        = "string"
+  default     = "CNAME"
+}
+
+variable "dns_record_ttl" {
+  description = "The ttl for the DNS record created if `dns_configuration` is specified."
+  type        = "string"
+  default     = "300"
 }
