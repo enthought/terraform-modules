@@ -1,12 +1,3 @@
-## inputs:
-# cluster name
-# cluster settings
-# connect to existing vpc?
-# vpc id
-# dns to cluster?
-## outputs:
-# instances
-# instance profile
 ########################################################################
 # Docker Cluster Resources
 ########################################################################
@@ -125,8 +116,17 @@ resource "aws_route" "specified_vpc_to_cluster" {
   vpc_peering_connection_id = "${aws_vpc_peering_connection.cluster_to_specified_vpc.id}"
 }
 
+locals {
+  peer_vpc_sg_name = "${
+    var.vpc_peering_configuration["vpc_id"] != "none"
+      ? format("%s-peer-vpc-sg")
+      : "none"
+  }"
+}
+
 resource "aws_security_group" "cluster_group_on_specified_vpc" {
   count       = "${var.vpc_peering_configuration["vpc_id"] != "none" ? 1 : 0}"
+  name        = "${local.peer_vpc_sg_name}"
   description = "Security group for the '${var.name}' docker cluster"
   vpc_id      = "${var.vpc_peering_configuration["vpc_id"]}"
 }
@@ -166,7 +166,7 @@ data "aws_instance" "first_manager" {
 }
 
 data "aws_instance" "first_worker" {
-  instance_id = "${data.aws_instance.cluster_workers.ids[0]}"
+  instance_id = "${data.aws_instances.cluster_workers.ids[0]}"
 }
 
 data "aws_iam_instance_profile" "manager_profile" {
@@ -175,4 +175,12 @@ data "aws_iam_instance_profile" "manager_profile" {
 
 data "aws_iam_instance_profile" "worker_profile" {
   name = "${data.aws_instance.first_worker.iam_instance_profile}"
+}
+
+data "aws_iam_role" "manager_profile_role" {
+  name = "${data.aws_iam_instance_profile.manager_profile.role_name}"
+}
+
+data "aws_iam_role" "worker_profile_role" {
+  name = "${data.aws_iam_instance_profile.worker_profile.role_name}"
 }
