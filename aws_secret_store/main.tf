@@ -88,6 +88,6 @@ data "aws_iam_policy_document" "secret_retrieval_policy_doc" {
 
 resource "aws_iam_policy" "secret_retrieval_policies" {
   count  = "${length(var.environments)}"
-  name   = "${var.namespace}-${var.environments[count.index]}-secret_retrieval"
+  name   = "${var.namespace}-${var.environments[count.index]}-secret-retrieval"
   policy = "${data.aws_iam_policy_document.secret_retrieval_policy_doc.*.json[count.index]}"
 }
