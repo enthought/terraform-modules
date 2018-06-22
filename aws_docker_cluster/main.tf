@@ -43,6 +43,24 @@ resource "aws_key_pair" "ssh_keypair" {
 # Docker Cluster Cloudformation Definition
 # **********************************************************************
 
+# For some reason, all of the booleans for this template are yes/no,
+# _except_ for EncryptEFS, which is true/false. To expose a consistent
+# API, we convert a yes/no into a true/false here.
+
+# Ensure the user specified one of yes/no, since we're just using a ternary
+# check on "yes" below
+resource "null_resource" "check_enable_efs_encryption" {
+  count = "${
+    var.enable_efs_encryption != "yes" && var.enable_efs_encryption != "no" ? 1 : 0
+  }"
+
+  "ERROR: enable_efs_encryption must be one of yes or no" = true
+}
+
+locals {
+  enable_efs_encryption = "${var.enable_efs_encryption == "yes" ? "true" : "false"}"
+}
+
 resource "aws_cloudformation_stack" "docker_cluster" {
   name               = "${var.name}"
   template_url       = "https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl"
@@ -54,7 +72,7 @@ resource "aws_cloudformation_stack" "docker_cluster" {
     EnableCloudWatchLogs = "${var.enable_cloudwatch_logs}"
     EnableEbsOptimized   = "${var.enable_optimized_ebs}"
     EnableSystemPrune    = "${var.enable_auto_prune}"
-    EncryptEFS           = "${var.enable_efs_encryption}"
+    EncryptEFS           = "${local.enable_efs_encryption}"
     InstanceType         = "${var.worker_instance_type}"
     KeyName              = "${local.ssh_key_name}"
     ManagerDiskSize      = "${var.manager_disk_size}"
@@ -119,7 +137,7 @@ resource "aws_route" "specified_vpc_to_cluster" {
 locals {
   peer_vpc_sg_name = "${
     var.vpc_peering_configuration["vpc_id"] != "none"
-      ? format("%s-peer-vpc-sg")
+      ? format("%s-peer-vpc-sg", var.name)
       : "none"
   }"
 }
