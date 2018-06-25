@@ -104,6 +104,7 @@ resource "aws_vpc_peering_connection" "cluster_to_specified_vpc" {
   count       = "${var.vpc_peering_configuration["vpc_id"] != "none" ? 1 : 0}"
   vpc_id      = "${var.vpc_peering_configuration["vpc_id"]}"
   peer_vpc_id = "${data.aws_vpc.cluster_vpc.id}"
+  auto_accept = true
 }
 
 data "aws_route_table" "secondary_cluster_table" {
@@ -145,7 +146,7 @@ locals {
 resource "aws_security_group" "cluster_group_on_specified_vpc" {
   count       = "${var.vpc_peering_configuration["vpc_id"] != "none" ? 1 : 0}"
   name        = "${local.peer_vpc_sg_name}"
-  description = "Security group for the '${var.name}' docker cluster"
+  description = "Security group for the ${var.name} docker cluster"
   vpc_id      = "${var.vpc_peering_configuration["vpc_id"]}"
 }
 
