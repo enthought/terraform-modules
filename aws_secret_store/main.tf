@@ -66,7 +66,7 @@ data "aws_iam_policy_document" "secret_retrieval_policy_doc" {
   count = "${length(var.environments)}"
 
   statement {
-    sid    = "${var.namespace}_${var.environments[count.index]}_secret_policy"
+    sid    = "${var.namespace}${var.environments[count.index]}SecretPolicy"
     effect = "Allow"
 
     actions = [

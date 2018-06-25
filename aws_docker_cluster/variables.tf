@@ -134,7 +134,7 @@ variable "manager_disk_type" {
 variable "worker_disk_size" {
   description = "Worker disk size in GiB."
   type        = "string"
-  default     = "standard"
+  default     = "20"
 }
 
 # Should be one of "standard" or "gp2"
