@@ -32,13 +32,14 @@ has_projects
 allow_merge_commit
 allow_rebase_merge
 allow_squash_merge
+auto_init
 topics
 ```
 ## Example
 
 ```
 module "MyReop" {
-  source                      = "./managedRepository"
+  source                      = "github.com/enthought/terraform-modules.git//managedRepository"
   project_name                = "MyRepo"
   project_description         = "This is a test of the managedrepo module"
   branch_protection           = true
@@ -51,6 +52,7 @@ module "MyReop" {
   external_collaborators_pull = ["dbolackthroaway"]
   has_wiki                    = false
   has_projects                = false
+  auto_init                   = true
 
   topics = [
     "Godzilla",
@@ -66,5 +68,7 @@ module "MyReop" {
 
 ## Known weaknesses
 
-Until the next terraform release this module is susceptible to the looping
+* Until the next terraform release this module is susceptible to the looping
 through lists for user memberships problem.
+* topic names must be lower case. The error thrown does not indicate this is
+the problem.
