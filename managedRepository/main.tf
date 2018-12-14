@@ -17,7 +17,7 @@ resource "github_repository" "managed_repository" {
   topics             = "${var.topics}"
 }
 
-resource "github_branch_protection" "managed_repository-master_branch_protection" {
+resource "github_branch_protection" "managed_repository_master_branch_protection" {
   count          = "${var.branch_protection}"
   repository     = "${github_repository.managed_repository.id}"
   branch         = "master"
@@ -38,42 +38,42 @@ resource "github_branch_protection" "managed_repository-master_branch_protection
 # Set up teams
 ######################################################
 
-resource "github_team" "managed_repository-internal_admins" {
+resource "github_team" "managed_repository_internal_admins" {
   count       = "${length(var.admin_teams_local)}"
   name        = "${var.project_name}_local_admins"
   description = "${var.project_name} internal admin team"
   privacy     = "closed"
 }
 
-resource "github_team" "managed_repository-external_admins" {
+resource "github_team" "managed_repository_external_admins" {
   count       = "${length(var.push_teams_external)}"
   name        = "${var.project_name}_external_admins"
   description = "${var.project_name} external admin team"
   privacy     = "closed"
 }
 
-resource "github_team" "managed_repository-internal_pull" {
+resource "github_team" "managed_repository_internal_pull" {
   count       = "${length(var.pull_teams_local)}"
   name        = "${var.project_name}_local_pull"
   description = "${var.project_name} internal pull access team"
   privacy     = "closed"
 }
 
-resource "github_team" "managed_repository-external_pull" {
+resource "github_team" "managed_repository_external_pull" {
   count       = "${length(var.push_teams_external)}"
   name        = "${var.project_name}_external_pull"
   description = "${var.project_name} external pull access team"
   privacy     = "closed"
 }
 
-resource "github_team" "managed_repository-internal_push" {
+resource "github_team" "managed_repository_internal_push" {
   count       = "${length(var.push_teams_local)}"
   name        = "${var.project_name}_local_push"
   description = "${var.project_name} internal push access team"
   privacy     = "closed"
 }
 
-resource "github_team" "managed_repository-external_push" {
+resource "github_team" "managed_repository_external_push" {
   count       = "${length(var.push_teams_external)}"
   name        = "${var.project_name}_external_push"
   description = "${var.project_name} external push access team"
@@ -84,44 +84,44 @@ resource "github_team" "managed_repository-external_push" {
 # Set up Team Relationships
 ######################################################
 
-resource "github_team_repository" "managed_repository-external_admins" {
+resource "github_team_repository" "managed_repository_external_admins" {
   count      = "${length(var.admin_teams_external)}"
   team_id    = "${var.admin_teams_external[count.index]}"
   repository = "${github_repository.managed_repository.name}"
   permission = "admin"
 }
 
-resource "github_team_repository" "managed_repository-internal_admins" {
+resource "github_team_repository" "managed_repository_internal_admins" {
   count      = "${length(var.admin_teams_local)}"
-  team_id    = "${github_team.managed_repository-internal_admins.id}"
+  team_id    = "${github_team.managed_repository_internal_admins.id}"
   repository = "${github_repository.managed_repository.name}"
   permission = "admin"
 }
 
-resource "github_team_repository" "managed_repository-external_pull" {
+resource "github_team_repository" "managed_repository_external_pull" {
   count      = "${length(var.pull_teams_external)}"
   team_id    = "${var.pull_teams_external[count.index]}"
   repository = "${github_repository.managed_repository.name}"
   permission = "pull"
 }
 
-resource "github_team_repository" "managed_repository-internal_pull" {
+resource "github_team_repository" "managed_repository_internal_pull" {
   count      = "${length(var.pull_teams_local)}"
-  team_id    = "${github_team.managed_repository-internal_pull.id}"
+  team_id    = "${github_team.managed_repository_internal_pull.id}"
   repository = "${github_repository.managed_repository.name}"
   permission = "pull"
 }
 
-resource "github_team_repository" "managed_repository-external_push" {
+resource "github_team_repository" "managed_repository_external_push" {
   count      = "${length(var.push_teams_external)}"
   team_id    = "${var.push_teams_external[count.index]}"
   repository = "${github_repository.managed_repository.name}"
   permission = "push"
 }
 
-resource "github_team_repository" "managed_repository-internal_push" {
+resource "github_team_repository" "managed_repository_internal_push" {
   count      = "${length(var.push_teams_local)}"
-  team_id    = "${github_team.managed_repository-internal_push.id}"
+  team_id    = "${github_team.managed_repository_internal_push.id}"
   repository = "${github_repository.managed_repository.name}"
   permission = "push"
 }
@@ -130,23 +130,23 @@ resource "github_team_repository" "managed_repository-internal_push" {
 # Team Memberships
 #######################################################
 
-resource "github_team_membership" "managed_repository-admin" {
+resource "github_team_membership" "managed_repository_admin" {
   count    = "${length(var.admin_teams_local)}"
-  team_id  = "${github_team.managed_repository-internal_admins.id}"
+  team_id  = "${github_team.managed_repository_internal_admins.id}"
   username = "${var.admin_teams_local[count.index]}"
   role     = "member"
 }
 
-resource "github_team_membership" "managed_repository-pull" {
+resource "github_team_membership" "managed_repository_pull" {
   count    = "${length(var.pull_teams_local)}"
-  team_id  = "${github_team.managed_repository-internal_pull.id}"
+  team_id  = "${github_team.managed_repository_internal_pull.id}"
   username = "${var.pull_teams_local[count.index]}"
   role     = "member"
 }
 
-resource "github_team_membership" "managed_repository-push" {
+resource "github_team_membership" "managed_repository_push" {
   count    = "${length(var.push_teams_local)}"
-  team_id  = "${github_team.managed_repository-internal_push.id}"
+  team_id  = "${github_team.managed_repository_internal_push.id}"
   username = "${var.push_teams_local[count.index]}"
   role     = "member"
 }
@@ -155,14 +155,14 @@ resource "github_team_membership" "managed_repository-push" {
 # Collaborators
 #######################################################
 
-resource "github_repository_collaborator" "managed_repository-collab_push" {
+resource "github_repository_collaborator" "managed_repository_collab_push" {
   count      = "${length(var.external_collaborators_push)}"
   repository = "${github_repository.managed_repository.id}"
   username   = "${var.external_collaborators_push[count.index]}"
   permission = "push"
 }
 
-resource "github_repository_collaborator" "managed_repository-collab_pull" {
+resource "github_repository_collaborator" "managed_repository_collab_pull" {
   count      = "${length(var.external_collaborators_pull)}"
   repository = "${github_repository.managed_repository.id}"
   username   = "${var.external_collaborators_pull[count.index]}"
