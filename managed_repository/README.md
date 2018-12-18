@@ -39,7 +39,7 @@ topics
 
 ```
 module "MyReop" {
-  source                      = "github.com/enthought/terraform-modules.git//managedRepository"
+  source                      = "github.com/enthought/terraform-modules.git//managed_repository"
   project_name                = "MyRepo"
   project_description         = "This is a test of the managedrepo module"
   branch_protection           = true
