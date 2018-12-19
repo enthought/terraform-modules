@@ -63,6 +63,7 @@ Naming Conventions
 
 * For consistency, module (folder) names, variable names, and output names
   should all be in ``snake_case``
+* When a name is a compound of more than one resource name, use - as the delimiter.
 
 Tips and Tricks
 ========================================================================
