@@ -40,42 +40,42 @@ resource "github_branch_protection" "managed_repository-master_branch_protection
 
 resource "github_team" "managed_repository-internal_admins" {
   count       = "${length(var.admin_teams_local)}"
-  name        = "${var.project_name}_local_admins"
+  name        = "${var.project_name}-local_admins"
   description = "${var.project_name} internal admin team"
   privacy     = "closed"
 }
 
 resource "github_team" "managed_repository-external_admins" {
   count       = "${length(var.push_teams_external)}"
-  name        = "${var.project_name}_external_admins"
+  name        = "${var.project_name}-external_admins"
   description = "${var.project_name} external admin team"
   privacy     = "closed"
 }
 
 resource "github_team" "managed_repository-internal_pull" {
   count       = "${length(var.pull_teams_local)}"
-  name        = "${var.project_name}_local_pull"
+  name        = "${var.project_name}-local_pull"
   description = "${var.project_name} internal pull access team"
   privacy     = "closed"
 }
 
 resource "github_team" "managed_repository-external_pull" {
   count       = "${length(var.push_teams_external)}"
-  name        = "${var.project_name}_external_pull"
+  name        = "${var.project_name}-external_pull"
   description = "${var.project_name} external pull access team"
   privacy     = "closed"
 }
 
 resource "github_team" "managed_repository-internal_push" {
   count       = "${length(var.push_teams_local)}"
-  name        = "${var.project_name}_local_push"
+  name        = "${var.project_name}-local_push"
   description = "${var.project_name} internal push access team"
   privacy     = "closed"
 }
 
 resource "github_team" "managed_repository-external_push" {
   count       = "${length(var.push_teams_external)}"
-  name        = "${var.project_name}_external_push"
+  name        = "${var.project_name}-external_push"
   description = "${var.project_name} external push access team"
   privacy     = "closed"
 }
@@ -93,7 +93,7 @@ resource "github_team_repository" "managed_repository-external_admins" {
 
 resource "github_team_repository" "managed_repository-internal_admins" {
   count      = "${length(var.admin_teams_local)}"
-  team_id    = "${github_team.managed_repository_internal_admins.id}"
+  team_id    = "${github_team.managed_repository-internal_admins.id}"
   repository = "${github_repository.managed_repository.name}"
   permission = "admin"
 }
@@ -107,7 +107,7 @@ resource "github_team_repository" "managed_repository-external_pull" {
 
 resource "github_team_repository" "managed_repository-internal_pull" {
   count      = "${length(var.pull_teams_local)}"
-  team_id    = "${github_team.managed_repository_internal_pull.id}"
+  team_id    = "${github_team.managed_repository-internal_pull.id}"
   repository = "${github_repository.managed_repository.name}"
   permission = "pull"
 }
@@ -121,7 +121,7 @@ resource "github_team_repository" "managed_repository-external_push" {
 
 resource "github_team_repository" "managed_repository-internal_push" {
   count      = "${length(var.push_teams_local)}"
-  team_id    = "${github_team.managed_repository_internal_push.id}"
+  team_id    = "${github_team.managed_repository-internal_push.id}"
   repository = "${github_repository.managed_repository.name}"
   permission = "push"
 }
@@ -132,21 +132,21 @@ resource "github_team_repository" "managed_repository-internal_push" {
 
 resource "github_team_membership" "managed_repository-admin" {
   count    = "${length(var.admin_teams_local)}"
-  team_id  = "${github_team.managed_repository_internal_admins.id}"
+  team_id  = "${github_team.managed_repository-internal_admins.id}"
   username = "${var.admin_teams_local[count.index]}"
   role     = "member"
 }
 
 resource "github_team_membership" "managed_repository-pull" {
   count    = "${length(var.pull_teams_local)}"
-  team_id  = "${github_team.managed_repository_internal_pull.id}"
+  team_id  = "${github_team.managed_repository-internal_pull.id}"
   username = "${var.pull_teams_local[count.index]}"
   role     = "member"
 }
 
 resource "github_team_membership" "managed_repository-push" {
   count    = "${length(var.push_teams_local)}"
-  team_id  = "${github_team.managed_repository_internal_push.id}"
+  team_id  = "${github_team.managed_repository-internal_push.id}"
   username = "${var.push_teams_local[count.index]}"
   role     = "member"
 }
