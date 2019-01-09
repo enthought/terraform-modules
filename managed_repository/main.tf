@@ -39,44 +39,23 @@ resource "github_branch_protection" "managed_repository-master_branch_protection
 ######################################################
 
 resource "github_team" "managed_repository-internal_admins" {
-  count       = "${length(var.admin_teams_local)}"
+  count       = "${length(var.admin_teams_local) > 0 ? 1 : 0}"
   name        = "${var.project_name}-local_admins"
   description = "${var.project_name} internal admin team"
   privacy     = "closed"
 }
 
-resource "github_team" "managed_repository-external_admins" {
-  count       = "${length(var.push_teams_external)}"
-  name        = "${var.project_name}-external_admins"
-  description = "${var.project_name} external admin team"
-  privacy     = "closed"
-}
-
 resource "github_team" "managed_repository-internal_pull" {
-  count       = "${length(var.pull_teams_local)}"
+  count       = "${length(var.pull_teams_local) > 0 ? 1 : 0}"
   name        = "${var.project_name}-local_pull"
   description = "${var.project_name} internal pull access team"
   privacy     = "closed"
 }
 
-resource "github_team" "managed_repository-external_pull" {
-  count       = "${length(var.push_teams_external)}"
-  name        = "${var.project_name}-external_pull"
-  description = "${var.project_name} external pull access team"
-  privacy     = "closed"
-}
-
 resource "github_team" "managed_repository-internal_push" {
-  count       = "${length(var.push_teams_local)}"
+  count       = "${length(var.push_teams_local) > 0 ? 1 : 0}"
   name        = "${var.project_name}-local_push"
   description = "${var.project_name} internal push access team"
-  privacy     = "closed"
-}
-
-resource "github_team" "managed_repository-external_push" {
-  count       = "${length(var.push_teams_external)}"
-  name        = "${var.project_name}-external_push"
-  description = "${var.project_name} external push access team"
   privacy     = "closed"
 }
 
