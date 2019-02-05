@@ -114,19 +114,13 @@ resource "github_team_membership" "managed_repository-admin" {
   team_id  = "${github_team.managed_repository-internal_admins.id}"
   username = "${var.admin_teams_local[count.index]}"
   role     = "member"
-  lifecycle  {
-    create_before_destroy=true
-  }
- }
+}
 
 resource "github_team_membership" "managed_repository-pull" {
   count    = "${length(var.pull_teams_local)}"
   team_id  = "${github_team.managed_repository-internal_pull.id}"
   username = "${var.pull_teams_local[count.index]}"
   role     = "member"
-  lifecycle  {
-    create_before_destroy=true
-  }
 }
 
 resource "github_team_membership" "managed_repository-push" {
@@ -134,9 +128,6 @@ resource "github_team_membership" "managed_repository-push" {
   team_id  = "${github_team.managed_repository-internal_push.id}"
   username = "${var.push_teams_local[count.index]}"
   role     = "member"
-  lifecycle  {
-    create_before_destroy=true
-  }
 }
 
 #######################################################
