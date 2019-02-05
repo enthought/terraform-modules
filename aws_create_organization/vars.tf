@@ -57,7 +57,7 @@ variable "vpc-name" {
 
 variable "vpc-cidr" {
   description = "CIDR block for the vpc"
-  default = ""
+  default = "10.20.0.0/16"
 }
 
 variable "vpc-availability-zones" {
