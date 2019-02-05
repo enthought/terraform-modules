@@ -6,7 +6,6 @@ locals {
   amended_tags = "${concat( ${var.silo-tags}, ["terraform"] )}"
 }
 
-
 resource "aws_key_pair" "org-key" {
   key_name   = "${var.silo-product-name-key.value}"
   public_key = "${var.aws-key-pair.value"}
@@ -14,6 +13,7 @@ resource "aws_key_pair" "org-key" {
 }
 
 module "silo-vpc" {
+  provider = "aws.${var.product-silo-name}"
   source = "terraform-aws-modules/vpc/aws"
 
   name = "${var.vpc-name}"
@@ -30,6 +30,7 @@ module "silo-vpc" {
 }
 
 module "silo-pritunl" {
+  provider = "aws.${var.product-silo-name}"
   source = "github.com/opsgang/terraform_pritunl?ref=2.0.0"
 
   aws_key_name         = "${aws_key_pair.org-key.key_name}"

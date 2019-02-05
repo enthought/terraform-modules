@@ -26,6 +26,11 @@ variable "silo-environment" {
 # AWS Account config
 ################################################
 
+variable "admin-id" {
+  description = "The Admin account ID to assume for this organization."
+  default = ""
+}
+
 variable "admin-role" {
   description = "The Admin role to assume for this organization."
   default = "EnthoughtOrgFullAdminRights"
