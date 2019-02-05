@@ -122,7 +122,7 @@ variable "repo_has_projects" {
 
 variable "repo_allow_merge_commit" {
   description = "Set This boolean on the repository?"
-  default     = false
+  default     = true
 }
 
 variable "repo_allow_rebase_merge" {
