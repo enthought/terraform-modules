@@ -2,11 +2,6 @@
 # Module variables
 ################################################
 
-variable "name" {
-  description = ""
-  default = ""
-}
-
 variable "silo-product-name" {
   description = "The Customer or Customer/Productname prepend for the silo."
   default = ""
@@ -14,7 +9,7 @@ variable "silo-product-name" {
 
 variable "silo-tags" {
   description = "Tags to apply to the VPC"
-  default = []
+  default = {}
 }
 
 variable "silo-environment" {
@@ -85,31 +80,31 @@ variable "vpc-enable-vpn-gateway" {
 }
 
 ################################################
-# Pritnl Configuration
+# pritunl Configuration
 ################################################
 
-variable "pritnl-ami-id" {
-  description = "AMI to use for pritnl instance"
+variable "pritunl-ami-id" {
+  description = "AMI to use for pritunl instance"
   default = "ami-0080e4c5bc078760e"
 }
 
-variable "pritnl-instance-type" {
-  description = "What size instance to use for the pritnl"
+variable "pritunl-instance-type" {
+  description = "What size instance to use for the pritunl"
   default = "t2.nano"
 }
 
-variable "pritnl-name-prefix" {
-  description = "Pritnl instance name prefix"
-  default = "pritnl"
+variable "pritunl-name-prefix" {
+  description = "pritunl instance name prefix"
+  default = "pritunl"
 }
 
-variable "pritnl-healthchecks-io-key" {
+variable "pritunl-healthchecks-io-key" {
   description = "Key for healthchecks.io if used."
   default = "NNNNNNNN-NNNN-NNNN-NNNN-NNNNNNNNNNN"
 }
 
-variable "pritnl-whitelist" {
-  description = "Array of CIDR blocks to whitelist in pritnl."
+variable "pritunl-whitelist" {
+  description = "Array of CIDR blocks to whitelist in pritunl."
   default = [
     "8.8.8.8/32",
     "24.227.217.184/29",

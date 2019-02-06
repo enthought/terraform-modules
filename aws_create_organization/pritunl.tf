@@ -1,19 +1,26 @@
 ################################################
-# Build the VPC and Pritnl instance
+# Build the VPC and pritunl instance
 ################################################
 
 locals {
-  amended_tags = "${concat( ${var.silo-tags}, ["terraform"] )}"
+  terraform-tag = {
+    "terraform" = "true"
+  }
+
+  pritunl-tag = {
+    "role" = "vpn",
+  }
+
+  amended_tags = "${merge( var.silo-tags, local.terraform-tag )}"
 }
 
 resource "aws_key_pair" "org-key" {
-  key_name   = "${var.silo-product-name-key.value}"
-  public_key = "${var.aws-key-pair.value"}
+  key_name   = "${var.silo-product-name}-key"
+  public_key = "${var.aws-key-pair}"
   
 }
 
 module "silo-vpc" {
-  provider = "aws.${var.product-silo-name}"
   source = "terraform-aws-modules/vpc/aws"
 
   name = "${var.vpc-name}"
@@ -30,18 +37,17 @@ module "silo-vpc" {
 }
 
 module "silo-pritunl" {
-  provider = "aws.${var.product-silo-name}"
-  source = "github.com/opsgang/terraform_pritunl?ref=2.0.0"
+  source = "github.com/opsgang/terraform_pritunl?ref=2.3.0"
 
   aws_key_name         = "${aws_key_pair.org-key.key_name}"
-  vpc_id               = "${module.vpc.vpc_id}"
-  public_subnet_id     = "${module.vpc.public_subnets[1]}"
-  ami_id               = "${var.pritnl-ami-id}"
-  instance_type        = "${var.pritnl-instance-type}"
-  resource_name_prefix = "${var.pritnl-name-prefix"
-  healthchecks_io_key  = "${var.pritnl-healthchecks-io-key}"
+  vpc_id               = "${module.silo-vpc.vpc_id}"
+  public_subnet_id     = "${module.silo-vpc.public_subnets[1]}"
+  ami_id               = "${var.pritunl-ami-id}"
+  instance_type        = "${var.pritunl-instance-type}"
+  resource_name_prefix = "${var.pritunl-name-prefix}"
+  healthchecks_io_key  = "${var.pritunl-healthchecks-io-key}"
 
-  whitelist = "${var.pritnl-whitelist}"
+  whitelist = "${var.pritunl-whitelist}"
 
-  tags = "${concat(${local.amended_tags}, ["vpn", "pritnl"])}"
+  tags = "${merge(local.amended_tags, local.pritunl-tag)}"
 }
