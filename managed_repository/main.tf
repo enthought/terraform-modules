@@ -15,6 +15,11 @@ resource "github_repository" "managed_repository" {
   allow_rebase_merge = "${var.repo_allow_rebase_merge}"
   auto_init          = "${var.repo_auto_init}"
   topics             = "${var.topics}"
+
+  lifecycle {
+    ignore_changes = ["id", "auto_init"]
+  }
+
 }
 
 resource "github_branch_protection" "managed_repository-master_branch_protection" {
