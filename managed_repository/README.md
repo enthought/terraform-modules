@@ -72,3 +72,11 @@ module "MyReop" {
 through lists for user memberships problem.
 * topic names must be lower case. The error thrown does not indicate this is
 the problem.
+
+## Additional Workflow Notes
+
+This CANNOT completely set up Travis-CI and APpVeyor. 
+Add: 
+* The AppVeyor Project
+* The HATCHER_TOKEN environment variable(s)
+  
