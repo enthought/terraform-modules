@@ -17,7 +17,10 @@ resource "github_repository" "managed_repository" {
   topics             = "${var.topics}"
 
   lifecycle {
-    ignore_changes = ["id", "auto_init"]
+    ignore_changes = [
+      "id", 
+      "auto_init"
+    ]
   }
 
 }
